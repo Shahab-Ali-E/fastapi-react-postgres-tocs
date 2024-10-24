@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:16.4
+    environment:
+      POSTGRES_PASSWORD: shahabali
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - fastapi-postgres-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - fastapi-postgres-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - fastapi-postgres-network
+
+networks:
+  fastapi-postgres-network:
+    driver: bridge
